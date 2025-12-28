@@ -2,6 +2,16 @@
 
 Since there is no Swift version of the SSKeychain tripartite library, I tried to do it myself.
 
+## Cocoapods
+
+```swift
+pod 'SSKeychain_Swift'
+```
+or
+```swift
+pod 'SSKeychain_Swift', git: 'https://github.com/HumorousGhost/SSKeychain.git'
+```
+
 ## Usage
 
 ```swift
