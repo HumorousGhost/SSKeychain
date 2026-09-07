@@ -21,7 +21,7 @@ public struct SSKeychain {
         var query: [String: AnyObject] = [
             kSecClass as String: kSecClassGenericPassword,
             kSecReturnData as String: kCFBooleanTrue,
-            kSecMatchLimit as String: kSecMatchLimitAll
+            kSecMatchLimit as String: kSecMatchLimitAll,
             kSecAttrAccessible as String: accessibility.rawValue
         ]
         
@@ -97,7 +97,7 @@ public struct SSKeychain {
             kSecAttrAccount as String: account as AnyObject,
             kSecMatchLimit as String: kSecMatchLimitOne,
             kSecReturnData as String: kCFBooleanTrue,
-            kSecClass as String: kSecClassGenericPassword
+            kSecClass as String: kSecClassGenericPassword,
             kSecAttrAccessible as String: accessibility.rawValue
         ]
         
@@ -140,7 +140,7 @@ public struct SSKeychain {
         let query = [
             kSecAttrService as String: name as AnyObject,
             kSecAttrAccount as String: account as AnyObject,
-            kSecClass as String: kSecClassGenericPassword
+            kSecClass as String: kSecClassGenericPassword,
             kSecAttrAccessible as String: accessibility.rawValue
         ]
         
@@ -192,7 +192,7 @@ public struct SSKeychain {
         var query = [
             kSecAttrService as String: name as AnyObject,
             kSecAttrAccount as String: account as AnyObject,
-            kSecClass as String: kSecClassGenericPassword
+            kSecClass as String: kSecClassGenericPassword,
             kSecAttrAccessible as String: accessibility.rawValue
         ]
         let value: Data? = self.value(data: name, account: account)
