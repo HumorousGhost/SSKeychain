@@ -8,7 +8,7 @@ public struct SSKeychain {
     /// - Returns: Array<String>
     public static func allAccount(name: String = "", accessibility: SSAccessibility = .whenUnlocked) -> [String] {
         do {
-            return try self.allAccounts(service: name, accessibility: SSAccessibility = .whenUnlocked)
+            return try self.allAccounts(service: name, accessibility: accessibility)
         } catch {
             return []
         }
@@ -67,7 +67,7 @@ public struct SSKeychain {
     ///   - account: account
     /// - Returns: String
     public static func value(service name: String, account: String, accessibility: SSAccessibility = .whenUnlocked) -> String {
-        if let data = self.value(data: name, account: account, accessibility: SSAccessibility = .whenUnlocked) {
+        if let data = self.value(data: name, account: account, accessibility: accessibility) {
             return String(data: data, encoding: .utf8) ?? ""
         }
         return ""
@@ -80,7 +80,7 @@ public struct SSKeychain {
     /// - Returns: Data?
     public static func value(data name: String, account: String, accessibility: SSAccessibility = .whenUnlocked) -> Data? {
         do {
-            let data: Data = try value(data: name, account: account, accessibility: SSAccessibility = .whenUnlocked)
+            let data: Data = try value(data: name, account: account, accessibility: accessibility)
             return data
         } catch {}
         return nil
@@ -126,7 +126,7 @@ public struct SSKeychain {
     /// - Returns: Bool, Is it deleted successfully
     public static func delete(name: String, account: String, accessibility: SSAccessibility = .whenUnlocked) -> Bool {
         do {
-            return try self.delete(service: name, account: account, accessibility: SSAccessibility = .whenUnlocked)
+            return try self.delete(service: name, account: account, accessibility: accessibility)
         } catch {}
         return false
     }
@@ -162,7 +162,7 @@ public struct SSKeychain {
     /// - Returns: Bool, Is it successfully set
     public static func setValue(_ value: String, service name: String, account: String, accessibility: SSAccessibility = .whenUnlocked) -> Bool {
         if let data = value.data(using: .utf8) {
-            return self.setValue(data: data, service: name, account: account, accessibility: SSAccessibility = .whenUnlocked)
+            return self.setValue(data: data, service: name, account: account, accessibility: accessibility)
         }
         return false
     }
@@ -176,7 +176,7 @@ public struct SSKeychain {
     /// - Returns: Bool, Is it successfully set
     public static func setValue(data: Data, service name: String, account: String, accessibility: SSAccessibility = .whenUnlocked) -> Bool {
         do {
-            return try setValue(data, service: name, account: account, accessibility: SSAccessibility = .whenUnlocked)
+            return try setValue(data, service: name, account: account, accessibility: accessibility)
         } catch {}
         return false
     }
@@ -195,7 +195,7 @@ public struct SSKeychain {
             kSecClass as String: kSecClassGenericPassword,
             kSecAttrAccessible as String: accessibility.rawValue
         ]
-        let value: Data? = self.value(data: name, account: account)
+        let value: Data? = self.value(data: name, account: account, accessibility: accessibility)
         if value == data {
             return true
         }
