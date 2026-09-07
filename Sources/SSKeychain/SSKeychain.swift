@@ -6,9 +6,9 @@ public struct SSKeychain {
     /// get keychain all account
     /// - Parameter name: service name, default ""
     /// - Returns: Array<String>
-    public static func allAccount(name: String = "") -> [String] {
+    public static func allAccount(name: String = "", accessibility: SSAccessibility = .whenUnlocked) -> [String] {
         do {
-            return try self.allAccounts(service: name)
+            return try self.allAccounts(service: name, accessibility: SSAccessibility = .whenUnlocked)
         } catch {
             return []
         }
@@ -17,11 +17,12 @@ public struct SSKeychain {
     /// get keychain all account, will throw an exception
     /// - Parameter name: service name, default ""
     /// - Returns: Array<String>
-    public static func allAccounts(service name: String = "") throws -> [String] {
+    public static func allAccounts(service name: String = "", accessibility: SSAccessibility = .whenUnlocked) throws -> [String] {
         var query: [String: AnyObject] = [
             kSecClass as String: kSecClassGenericPassword,
             kSecReturnData as String: kCFBooleanTrue,
             kSecMatchLimit as String: kSecMatchLimitAll
+            kSecAttrAccessible as String: accessibility.rawValue
         ]
         
         if !name.isEmpty {
@@ -65,8 +66,8 @@ public struct SSKeychain {
     ///   - name: service name
     ///   - account: account
     /// - Returns: String
-    public static func value(service name: String, account: String) -> String {
-        if let data = self.value(data: name, account: account) {
+    public static func value(service name: String, account: String, accessibility: SSAccessibility = .whenUnlocked) -> String {
+        if let data = self.value(data: name, account: account, accessibility: SSAccessibility = .whenUnlocked) {
             return String(data: data, encoding: .utf8) ?? ""
         }
         return ""
@@ -77,9 +78,9 @@ public struct SSKeychain {
     ///   - name: service name
     ///   - account: account
     /// - Returns: Data?
-    public static func value(data name: String, account: String) -> Data? {
+    public static func value(data name: String, account: String, accessibility: SSAccessibility = .whenUnlocked) -> Data? {
         do {
-            let data: Data = try value(data: name, account: account)
+            let data: Data = try value(data: name, account: account, accessibility: SSAccessibility = .whenUnlocked)
             return data
         } catch {}
         return nil
@@ -90,13 +91,14 @@ public struct SSKeychain {
     ///   - name: service
     ///   - account: account
     /// - Returns: Data
-    public static func value(data name: String, account: String) throws -> Data {
+    public static func value(data name: String, account: String, accessibility: SSAccessibility = .whenUnlocked) throws -> Data {
         let query: [String: AnyObject] = [
             kSecAttrService as String: name as AnyObject,
             kSecAttrAccount as String: account as AnyObject,
             kSecMatchLimit as String: kSecMatchLimitOne,
             kSecReturnData as String: kCFBooleanTrue,
             kSecClass as String: kSecClassGenericPassword
+            kSecAttrAccessible as String: accessibility.rawValue
         ]
         
         var itemCopy: AnyObject?
@@ -122,9 +124,9 @@ public struct SSKeychain {
     ///   - name: service name
     ///   - account: account
     /// - Returns: Bool, Is it deleted successfully
-    public static func delete(name: String, account: String) -> Bool {
+    public static func delete(name: String, account: String, accessibility: SSAccessibility = .whenUnlocked) -> Bool {
         do {
-            return try self.delete(service: name, account: account)
+            return try self.delete(service: name, account: account, accessibility: SSAccessibility = .whenUnlocked)
         } catch {}
         return false
     }
@@ -134,11 +136,12 @@ public struct SSKeychain {
     ///   - name: service name
     ///   - account: account
     /// - Returns: Bool, Is it deleted successfully
-    public static func delete(service name: String, account: String) throws -> Bool {
+    public static func delete(service name: String, account: String, accessibility: SSAccessibility = .whenUnlocked) throws -> Bool {
         let query = [
             kSecAttrService as String: name as AnyObject,
             kSecAttrAccount as String: account as AnyObject,
             kSecClass as String: kSecClassGenericPassword
+            kSecAttrAccessible as String: accessibility.rawValue
         ]
         
         let status = SecItemDelete(query as CFDictionary)
@@ -157,9 +160,9 @@ public struct SSKeychain {
     ///   - name: service name
     ///   - account: account
     /// - Returns: Bool, Is it successfully set
-    public static func setValue(_ value: String, service name: String, account: String) -> Bool {
+    public static func setValue(_ value: String, service name: String, account: String, accessibility: SSAccessibility = .whenUnlocked) -> Bool {
         if let data = value.data(using: .utf8) {
-            return self.setValue(data: data, service: name, account: account)
+            return self.setValue(data: data, service: name, account: account, accessibility: SSAccessibility = .whenUnlocked)
         }
         return false
     }
@@ -171,9 +174,9 @@ public struct SSKeychain {
     ///   - name: service name
     ///   - account: account
     /// - Returns: Bool, Is it successfully set
-    public static func setValue(data: Data, service name: String, account: String) -> Bool {
+    public static func setValue(data: Data, service name: String, account: String, accessibility: SSAccessibility = .whenUnlocked) -> Bool {
         do {
-            return try setValue(data, service: name, account: account)
+            return try setValue(data, service: name, account: account, accessibility: SSAccessibility = .whenUnlocked)
         } catch {}
         return false
     }
@@ -185,11 +188,12 @@ public struct SSKeychain {
     ///   - name: service name
     ///   - account: account
     /// - Returns: Bool, Is it successfully set
-    public static func setValue(_ data: Data, service name: String, account: String) throws -> Bool {
+    public static func setValue(_ data: Data, service name: String, account: String, accessibility: SSAccessibility = .whenUnlocked) throws -> Bool {
         var query = [
             kSecAttrService as String: name as AnyObject,
             kSecAttrAccount as String: account as AnyObject,
             kSecClass as String: kSecClassGenericPassword
+            kSecAttrAccessible as String: accessibility.rawValue
         ]
         let value: Data? = self.value(data: name, account: account)
         if value == data {
